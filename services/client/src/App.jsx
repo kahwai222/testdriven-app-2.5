@@ -8,6 +8,7 @@ import About from './components/About';
 import NavBar from './components/NavBar';
 import Form from './components/Form';
 import Logout from './components/Logout';
+import UserStatus from './components/UserStatus';
 
 
 class App extends Component {
@@ -67,7 +68,7 @@ class App extends Component {
     if (formType === 'register') {
       data.username = this.state.formData.username;
     }
-    const url = `${process.env.REACT_APP_USERS_SERVICE_URL}/auth/${formType}`
+    const url = `${process.env.REACT_APP_USERS_SERVICE_URL}/auth/${formType}`;
     axios.post(url, data)
     .then((res) => {
       this.clearFormState();
@@ -96,7 +97,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar title={this.state.title} />
+        <NavBar
+          title={this.state.title}
+          isAuthenticated={this.state.isAuthenticated}
+        />
         <section className="section">
           <div className="container">
             <div className="columns">
@@ -139,6 +143,11 @@ class App extends Component {
                   <Route exact path='/logout' render={() => (
                     <Logout
                       logoutUser={this.logoutUser}
+                      isAuthenticated={this.state.isAuthenticated}
+                    />
+                  )} />
+                  <Route exact path='/status' render={() => (
+                    <UserStatus
                       isAuthenticated={this.state.isAuthenticated}
                     />
                   )} />
