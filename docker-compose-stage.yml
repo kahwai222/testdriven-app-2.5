@@ -1,21 +1,21 @@
-version: '3.3'
+version: '3.7'
 
 services:
 
   users:
     build:
       context: ./services/users
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-stage
     expose:
       - 5000
     environment:
       - COMPOSE_CONVERT_WINDOWS_PATHS=1
       - FLASK_APP=project/__init__.py
       - FLASK_ENV=production
-      - APP_SETTINGS=project.config.ProductionConfig
-      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_prod
+      - APP_SETTINGS=project.config.StagingConfig
+      - DATABASE_URL=postgres://postgres:postgres@users-db:5432/users_stage
       - DATABASE_TEST_URL=postgres://postgres:postgres@users-db:5432/users_test
-      - SECRET_KEY=${SECRET_KEY}
+      - SECRET_KEY=my_precious
     depends_on:
       - users-db
 
@@ -32,7 +32,7 @@ services:
   client:
     build:
       context: ./services/client
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-stage
       args:
         - NODE_ENV=production
         - REACT_APP_USERS_SERVICE_URL=${REACT_APP_USERS_SERVICE_URL}
@@ -55,7 +55,7 @@ services:
   nginx:
     build:
       context: ./services/nginx
-      dockerfile: Dockerfile-prod
+      dockerfile: Dockerfile-stage
     restart: always
     ports:
       - 80:80
